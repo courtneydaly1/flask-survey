@@ -14,13 +14,13 @@ Responses_key = "responses"
 def show_survey_start():
     return render_template('survey_start.html', survey=survey)
 
-@app.route('/begin', method=["POST"])
+@app.route('/begin', methods=["POST"])
 def start_survey():
     session[Responses_key] = []
 
     return redirect('/questions/0')
 
-@app.route('/answer', method=["POST"])
+@app.route('/answer', methods=["POST"])
 def handle_question():
     choice = request.form['answer']
     responses = session[Responses_key]
@@ -30,7 +30,7 @@ def handle_question():
     if (len(responses)== len(survey.questions)):
         return redirect("/complete")
     else:
-        redirect(f"/questions/{len(responses)}")
+      return redirect(f"/questions/{len(responses)}")
 
 @app.route('/questions/<int:qid>')
 def show_question(qid):
@@ -40,12 +40,12 @@ def show_question(qid):
         return redirect('/')
     if(len(responses)== len(survey.questions)):
         return redirect("/complete")
-    if (len(responses) !== qid):
+    if (len(responses) != qid):
         flash(f"INVALID QUESTION ID: {qid}!")
         return redirect(f"/questions/{len(responses)}")
     
     question = survey.questions[qid]
-    return render_template("questions.html", question_num=qid, question=question)
+    return render_template("question.html", question_num=qid, question=question)
 
 @app.route("/complete")
 def complete():
